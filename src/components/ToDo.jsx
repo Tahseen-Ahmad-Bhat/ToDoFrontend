@@ -7,8 +7,9 @@ const ToDo = () => {
 
   useEffect(() => {
     const fetchTasks = async () => {
-      const res = await getTasks();
-      setTasks([...res]);
+      const { tasks, error } = await getTasks();
+
+      setTasks([...tasks]);
     };
     fetchTasks();
   }, []);
