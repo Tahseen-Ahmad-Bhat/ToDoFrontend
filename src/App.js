@@ -1,12 +1,10 @@
 import { useState } from "react";
-import "./App.css";
 
 import Doing from "./components/Doing";
 import Done from "./components/Done";
 import Nav from "./components/Nav";
 import ToDo from "./components/ToDo";
 import AddTaskModal from "./components/modals/AddTaskModal";
-import Wrapper from "./misc/Wrapper";
 
 function App() {
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
