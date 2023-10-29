@@ -1,6 +1,6 @@
 import React from "react";
 
-const TaskItem = () => {
+const TaskItem = ({ task }) => {
   const handleClick = (e) => {
     console.log(e.target.id);
   };
@@ -8,7 +8,7 @@ const TaskItem = () => {
   return (
     <div className="space-y-4 ">
       <div className="p-4 bg-slate-400 rounded-md my-4 flex items-center justify-between">
-        <p>Title</p>
+        <p>{task.title}</p>
         <div className="flex items-center justify-center gap-4">
           <label htmlFor="doing">Doing</label>
           <input
