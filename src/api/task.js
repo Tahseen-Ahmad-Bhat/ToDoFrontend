@@ -19,3 +19,23 @@ export const addTask = async (task) => {
     return { error: error.message || error };
   }
 };
+
+export const deleteTask = async (id) => {
+  try {
+    const { data } = await client.delete("/task/delete-task/" + id);
+
+    return data;
+  } catch (error) {
+    return { error: error.message || error };
+  }
+};
+
+export const updateTask = async (id) => {
+  try {
+    const { data } = await client.post("/task/update-task/" + id);
+
+    return data;
+  } catch (error) {
+    return { error: error.message || error };
+  }
+};

@@ -1,28 +1,48 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import Wrapper from "../../misc/Wrapper";
 import { addTask } from "../../api/task";
+import Close from "../../misc/Close";
+import { TaskContext } from "../../context/TaskProvider";
+import { useNavigate } from "react-router-dom";
 
 const defaultTaskValue = {
   title: "",
   description: "",
+  status: "todo",
 };
 
 const AddTaskModal = ({ onClose }) => {
   const [task, setTask] = useState({ ...defaultTaskValue });
 
+  // Get tasks from taskContext
+  const { tasks, setTasks } = useContext(TaskContext);
+
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
-    console.log(e.target);
     const { name, value } = e.target;
 
     setTask({ ...task, [name]: value });
   };
 
   const handleAddTask = async (e) => {
+    // generate unique id
+    const id = uuidv4();
+    task.id = id;
+
+    // Add the given task to tasklist before storing in the backend
+    tasks.push(task);
+    setTasks([...tasks]);
+
     const { error, message } = await addTask(task);
     // console.log(message);
     setTask({ ...defaultTaskValue });
 
     onClose();
+
+    navigate("/");
   };
 
   const { title, description } = task;
@@ -58,8 +78,7 @@ const AddTaskModal = ({ onClose }) => {
           className="absolute -top-20 -right-20 cursor-pointer p-2 px-4 rounded-full bg-black"
           onClick={onClose}
         >
-          <div className="w-[3px] h-5 rotate-45 bg-white"></div>
-          <div className="w-[3px] h-5 -rotate-45 absolute top-2 bg-white"></div>
+          <Close />
         </div>
       </div>
     </Wrapper>
