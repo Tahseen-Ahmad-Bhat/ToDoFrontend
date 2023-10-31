@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import Done from "./components/Done";
 import Nav from "./components/Nav";
-import ToDo from "./components/ToDo";
 import AddTaskModal from "./components/modals/AddTaskModal";
 import Task from "./components/Task";
 import Main from "./components/Main";
+import NotificationContainer from "./util/Notification.js";
 
 function App() {
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
@@ -28,7 +27,11 @@ function App() {
         <Route path="/task/:taskId" element={<Task />} />
       </Routes>
 
+      {/* Add Task modal */}
       {showAddTaskModal && <AddTaskModal onClose={handleCloseTaskModal} />}
+
+      {/* Notificaiton container */}
+      <NotificationContainer />
     </div>
   );
 }

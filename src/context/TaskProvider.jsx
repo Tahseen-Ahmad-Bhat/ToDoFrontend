@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { getTasks } from "../api/task";
+import { notify } from "../util/Notification";
 
 export const TaskContext = createContext();
 
@@ -19,6 +20,8 @@ const TaskProvider = ({ children }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       const { tasks, error } = await getTasks();
+
+      if (error) return notify("error", error);
 
       setTasks([...tasks]);
     };

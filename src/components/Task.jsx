@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TaskContext } from "../context/TaskProvider";
 import { updateTask } from "../api/task";
+import { notify } from "../util/Notification";
 
 const Task = () => {
   const [isCompleted, setIsCompleted] = useState(false);
@@ -29,7 +30,11 @@ const Task = () => {
     navigate("/");
 
     // Send an update request to backend
-    await updateTask(taskId);
+    const { error, message } = await updateTask(taskId);
+
+    if (error) return notify("error", error);
+
+    notify("success", message);
   };
 
   useEffect(() => {
@@ -54,7 +59,7 @@ const Task = () => {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          {currentTask?.status == "todo" ? (
+          {currentTask?.status === "todo" ? (
             <div className="flex items-center gap-4">
               <label htmlFor="done">Mark as done</label>
               <input

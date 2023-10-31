@@ -1,13 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 
 import { AiOutlineClose } from "react-icons/ai";
 import { deleteTask } from "../api/task";
 import { TaskContext } from "../context/TaskProvider.jsx";
+import { notify } from "../util/Notification";
 
 const TaskItem = ({ task }) => {
-  const [isLinkDisabled, setIsLinkDisabled] = useState(false);
-
   const { id } = task;
 
   const { tasks, setTasks } = useContext(TaskContext);
@@ -15,7 +14,9 @@ const TaskItem = ({ task }) => {
   const handleDeleteTask = async (e) => {
     const { error, message } = await deleteTask(id);
 
-    console.log(message);
+    if (error) return notify("error", error);
+
+    notify("success", message);
 
     const newTasks = tasks.filter((task) => task.id !== id);
 

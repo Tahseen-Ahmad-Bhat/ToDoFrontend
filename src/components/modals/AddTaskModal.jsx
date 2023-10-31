@@ -6,6 +6,11 @@ import { addTask } from "../../api/task";
 import Close from "../../misc/Close";
 import { TaskContext } from "../../context/TaskProvider";
 import { useNavigate } from "react-router-dom";
+import { notify } from "../../util/Notification";
+import {
+  validateTaskDescription,
+  validateTaskName,
+} from "../../util/Validation";
 
 const defaultTaskValue = {
   title: "",
@@ -28,6 +33,13 @@ const AddTaskModal = ({ onClose }) => {
   };
 
   const handleAddTask = async (e) => {
+    // Validate data
+    if (!validateTaskName(task.title))
+      return notify("error", "Enter task title!");
+
+    if (!validateTaskDescription(task.description))
+      return notify("error", "Enter task description!");
+
     // generate unique id
     const id = uuidv4();
     task.id = id;
@@ -37,7 +49,11 @@ const AddTaskModal = ({ onClose }) => {
     setTasks([...tasks]);
 
     const { error, message } = await addTask(task);
-    // console.log(message);
+
+    if (error) return notify("error", error);
+
+    notify("success", message);
+
     setTask({ ...defaultTaskValue });
 
     onClose();
