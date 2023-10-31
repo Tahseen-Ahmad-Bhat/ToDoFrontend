@@ -15,7 +15,6 @@ These instructions will get you a copy of the project up and running on your loc
 
 Clone the repository to your local machine:
 
-```bash
 git clone https://github.com/Tahseen-Ahmad-Bhat/ToDoFrontend.git
 
 # Change into the project directory:
@@ -38,6 +37,8 @@ To build the application for production, use the following command:
 
 npm run build
 
-
 This will create an optimized production build in the build directory
-```
+
+### IMPORTANT NOTE
+
+Make sure the backend is up and running before performing any operation(Adding/deleting task) in frontend.
