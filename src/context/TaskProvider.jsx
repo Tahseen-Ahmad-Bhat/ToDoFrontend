@@ -1,21 +1,61 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect } from "react";
 import { getTasks } from "../api/task";
 import { notify } from "../util/Notification";
+import { useReducer } from "react";
+import { createAction } from "../util/reducer/reducer.util";
 
 export const TaskContext = createContext();
 
-const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
-  const [todoTasks, setTodoTasks] = useState([]);
-  const [completedTasks, setCompletedTasks] = useState([]);
+const TASK_ACTION_TYPES = {
+  SET_TASKS: "SET_TASKS",
+};
 
-  useEffect(() => {
+const INITIAL_STATE = {
+  tasks: [],
+  todoTasks: [],
+  completedTasks: [],
+};
+
+const taskReducer = (state, action) => {
+  const { type, payload } = action;
+
+  console.log(payload);
+
+  switch (type) {
+    case TASK_ACTION_TYPES.SET_TASKS:
+      return {
+        ...state,
+        ...payload,
+      };
+
+    default:
+      throw new Error(`Unhandled type of ${type} in taskReducer!`);
+  }
+};
+
+const TaskProvider = ({ children }) => {
+  const [{ tasks, todoTasks, completedTasks }, dispatch] = useReducer(
+    taskReducer,
+    INITIAL_STATE
+  );
+
+  const updateTaskReducer = (tasks) => {
     const newTodoTasks = tasks.filter((task) => task.status === "todo");
-    setTodoTasks([...newTodoTasks]);
 
     const newCompletedTasks = tasks.filter((task) => task.status === "done");
-    setCompletedTasks([...newCompletedTasks]);
-  }, [tasks]);
+
+    dispatch(
+      createAction(TASK_ACTION_TYPES.SET_TASKS, {
+        tasks,
+        todoTasks: newTodoTasks,
+        completedTasks: newCompletedTasks,
+      })
+    );
+  };
+
+  const setTasks = (newTasks) => {
+    updateTaskReducer(newTasks);
+  };
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -23,7 +63,7 @@ const TaskProvider = ({ children }) => {
 
       if (error) return notify("error", error);
 
-      setTasks([...tasks]);
+      updateTaskReducer(tasks);
     };
     fetchTasks();
   }, []);
@@ -34,9 +74,9 @@ const TaskProvider = ({ children }) => {
         tasks,
         setTasks,
         todoTasks,
-        setTodoTasks,
+        setTodoTasks: () => null,
         completedTasks,
-        setCompletedTasks,
+        setCompletedTasks: () => null,
       }}
     >
       {children}

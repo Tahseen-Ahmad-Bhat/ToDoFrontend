@@ -43,7 +43,7 @@ const Task = () => {
     });
 
     setCurrentTask({ ...task });
-  }, []);
+  }, [taskId]);
 
   return (
     <div className="flex items-center justify-center min-h-[80vh] p-5">
